@@ -8,7 +8,5 @@
 
 <template>
     <Head :title=" $page.component" />
-    <div>
-        <h1>{{ $page.props.auth.user}}</h1>
-    </div>
+    <Link class="mt-[600px] block" href="/" preserve-scroll> Refresh</Link>
 </template>

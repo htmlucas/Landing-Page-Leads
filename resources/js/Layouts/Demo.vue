@@ -5,6 +5,7 @@
                 <div class="space-x-6">
                     <a href="/">Home</a>
                     <a href="/about">About</a>
+                    <a :href="route('form')">Form</a>
                 </div>
             </nav>
         </header>
