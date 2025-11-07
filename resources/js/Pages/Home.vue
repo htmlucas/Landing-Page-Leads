@@ -7,8 +7,8 @@
 </script>
 
 <template>
-    <Head title="Home" />
+    <Head :title=" $page.component" />
     <div>
-        <h1>hello</h1>
+        <h1>{{ $page.props.auth.user}}</h1>
     </div>
 </template>
