@@ -9,5 +9,7 @@ Route::inertia('/', 'Home')->name('home');
 Route::inertia('/about','About', ['user' => 'John Doe'])->name('about');
 
 Route::inertia('/form', 'Auth/Form')->name('form');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
 
-Route::post('/register', [AuthController::class, 'register']);
+Route::inertia('/login', 'Auth/Login')->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
