@@ -9,7 +9,8 @@
             <nav class="flex items-center justify-between p-4 max-w-screen-lg mx-auto">
                 <div class="space-x-6">
                     <Link :href="route('home')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Home'}">Home</Link>
-                    <Link :href="route('about')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'About'}">About</Link>                    
+                    <Link :href="route('about')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'About'}">About</Link>
+                    <Link :href="route('campaign')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Campaign'}">Campaign</Link>
                 </div>
                 <div v-if="$page.props.auth.user" class="flex items-center gap-6">
                     <img :src="$page.props.auth.user.avatar ? ('storage/' + $page.props.auth.user.avatar): ('storage/avatars/default.png')" loading="lazy" class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full object-cover border-2 border-white shadow-sm">
