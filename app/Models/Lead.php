@@ -9,6 +9,8 @@ class Lead extends Model
 {
     protected $fillable = [        
         'email',
+        'name',
+        'phone',
         'consent',
         'origin'
     ];

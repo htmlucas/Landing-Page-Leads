@@ -9,18 +9,29 @@ const props = defineProps({
 
 const form = useForm({
     email: null,
-    consent: false,
+    name: null,
+    phone: null,
+    consent: null,
     origin: props.lead_origin,
+    hp: '',
+    recaptcha_token: '',
 });
 
 const submitForm = () => {
-    
-    form.post(route('subscribe'),{
-        onError: () => {
-            
-        },
+    grecaptcha.ready(() => {
+        grecaptcha.execute(import.meta.env.VITE_RECAPTCHA_SITE_KEY, { action: "subscribe" })
+            .then((token) => {
+                form.recaptcha_token = token;
+                    form.post(route('subscribe'),{
+                        onSuccess: () => {
+                            form.reset('email','name','phone','consent');
+                        },
+                    });
+            });
     });
-    console.log('Form submitted:', form);
+
+
+
 };
 
 </script>
@@ -37,17 +48,42 @@ const submitForm = () => {
                 @submit.prevent="submitForm"
                 class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-8 space-y-6"
             >
+
+            <!-- HoneyPot (evitar spam) -->
+                <input 
+                    type="text"
+                    name="hp"
+                    v-model="form.hp"
+                    style="display:none"
+                    autocomplete="off"
+                />
+
+
                 <TextInput name="Email" type="email" v-model="form.email" :message="form.errors.email" />
+                <TextInput name="Name" type="text" v-model="form.name" :message="form.errors.name" />
+
+                <div>
+                    <label for="phone" class="block text-gray-700 font-medium mb-2">Phone</label>
+                    <input 
+                        type="text" 
+                        v-mask="['(##) ####-####', '(##) #####-####']"
+                        placeholder="Phone" 
+                        v-model="form.phone" 
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        id="phone"
+                    />
+                </div>
+                
                 <div class="flex items-center gap-2">
                     <label for="consent">Consent?</label>
                     <input type="checkbox" id="consent" v-model="form.consent">
+                    <small class="text-red-600" v-if="form.errors.consent"> {{ form.errors.consent }} </small>
                 </div>
                 <button type="submit" :disabled="form.processing"
                     class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-colors cursor-pointer">
                     Send
                 </button>
             </form>
-            
         </div>
         
     </div>

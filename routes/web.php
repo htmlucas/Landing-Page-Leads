@@ -19,7 +19,7 @@ Route::middleware('guest')->group(function () {
 
     //Route::inertia('/campaign','Campaign')->name('campaign');
     Route::get('/campaign', [CampaignController::class, 'index'])->name('campaign');
-    Route::post('subscribe', [LeadsController::class, 'store'])->name('subscribe');
+    Route::post('subscribe', [LeadsController::class, 'store'])->name('subscribe')->middleware('throttle:5,1');
 
     Route::inertia('/form', 'Auth/Form')->name('form');
     Route::post('/register', [AuthController::class, 'register'])->name('register');
