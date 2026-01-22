@@ -1,7 +1,7 @@
 
 <template>
     <Head>
-        <title>My App</title>
+        <title>Martins</title>
         <meta name="description" content="this is default description">
     </Head>
     <div>

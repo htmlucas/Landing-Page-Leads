@@ -7,7 +7,7 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import VueTheMask from 'vue-the-mask'
 
 createInertiaApp({
-  title: (title) => `My App ${title}`,
+  title: (title) => `Landing Page - ${title}`,
   resolve: name => {
     const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
     let page = pages[`./Pages/${name}.vue`];
