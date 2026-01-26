@@ -4,4 +4,4 @@
 
 ### Recaptcha v3 (google atribui um score para o usuario com base no comportamento e devolve se ta ok)
 
-### Email automatico com retry apos cadastro no lead.
+### Envio de email automatico com retry apos envio do cadastro lead.

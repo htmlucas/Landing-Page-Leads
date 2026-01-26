@@ -12,7 +12,7 @@ const form = useForm({
     name: null,
     phone: null,
     consent: null,
-    origin: props.lead_origin,
+    origin: 'youtube_ads',
     hp: '',
     recaptcha_token: '',
 });

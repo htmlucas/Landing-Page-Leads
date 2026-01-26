@@ -12,10 +12,10 @@ class Lead extends Model
         'name',
         'phone',
         'consent',
-        'origin'
+        'origins'
     ];
 
     protected $casts = [
-        'origin' => LeadOrigin::class,
+        'origins' => 'array',
     ];
 }
