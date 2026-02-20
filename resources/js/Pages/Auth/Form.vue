@@ -18,7 +18,6 @@ const change = (e) => {
 }
 
 const submitForm = () => {
-    // Handle form submission logic here
     form.post(route('register'),{
         onError: () => {
             form.reset('password','password_confirmation');

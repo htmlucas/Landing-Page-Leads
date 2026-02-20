@@ -54,7 +54,7 @@ class LeadsController extends Controller
 
             SendLeadEmail::dispatch($lead)->afterCommit();
 
-             return ['lead' => $lead, 'already_exists' => false];
+            return ['lead' => $lead, 'already_exists' => false];
         });
 
         return redirect()->route('campaign')->with('greet', 'Thank you for subscribing!');
