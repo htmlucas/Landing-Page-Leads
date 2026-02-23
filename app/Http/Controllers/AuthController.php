@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,9 @@ class AuthController extends Controller
         if($request->hasFile('avatar')){
             $fields['avatar'] = Storage::disk('public')->put('avatars', $request->file('avatar'));
         }
+
+        $user_role_id = Role::where('name', 'user')->first()->id;
+        $fields['role_id'] = $user_role_id;
 
         $user = User::create($fields);
 

@@ -13,7 +13,9 @@ Route::middleware('auth')->group(function () {
     Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
 
+Route::middleware('admin')->group(function () {
     Route::get('/admin/audit',[AuditController::class, 'index'])->name('admin.audit');
 });
 

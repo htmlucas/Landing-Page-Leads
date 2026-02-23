@@ -42,7 +42,7 @@ const submitForm = () => {
             <span class="font-medium">{{ $page.props.flash.greet }}</span>
         </div>
 
-        <div v-if="audits.length" class="flex items-center p-2 mb-4 text-sm text-green-800">
+        <div v-if="audits?.length" class="flex items-center p-2 mb-4 text-sm text-green-800">
             <div v-for="audit in audits" :key="audit.id">
                 {{  audit.description }}
             </div>
