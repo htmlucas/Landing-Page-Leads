@@ -21,7 +21,10 @@ const user = computed(() => page.props.auth.user)
                     <Link :href="route('campaign')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Campaign'}">Campaign</Link>
                 </div>
                 <div v-if="user?.is_admin">
-                    <Link :href="route('admin.audit')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Auth/Admin/Audit'}">Audits</Link>
+                    <div class="space-x-6">
+                        <Link :href="route('admin.audit')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Auth/Admin/Audit'}">Audits</Link>
+                        <Link :href="route('admin.dashboard')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Auth/Admin/Dashboard'}">Dashboard</Link>
+                    </div>
                 </div>
                 <div v-if="user" class="flex items-center gap-6">
                     <img :src="user.avatar ? ('storage/' + user.avatar): ('storage/avatars/default.png')" loading="lazy" class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full object-cover border-2 border-white shadow-sm">

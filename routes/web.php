@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LeadsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -17,6 +18,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('admin')->group(function () {
     Route::get('/admin/audit',[AuditController::class, 'index'])->name('admin.audit');
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 });
 
 Route::middleware('guest')->group(function () {

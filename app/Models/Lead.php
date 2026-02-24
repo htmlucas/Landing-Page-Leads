@@ -27,6 +27,5 @@ class Lead extends Model
     {
         return LogOptions::defaults()
         ->logOnly(['name', 'phone', 'consent', 'origins']);
-        // Chain fluent methods for configuration options
     }
 }
