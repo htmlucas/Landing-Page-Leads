@@ -24,10 +24,11 @@ const user = computed(() => page.props.auth.user)
                     <div class="space-x-6">
                         <Link :href="route('admin.audit')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Auth/Admin/Audit'}">Audits</Link>
                         <Link :href="route('admin.dashboard')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Auth/Admin/Dashboard'}">Dashboard</Link>
+                        <Link :href="route('admin.leads')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Auth/Admin/Lead'}">Leads</Link>
                     </div>
                 </div>
                 <div v-if="user" class="flex items-center gap-6">
-                    <img :src="user.avatar ? ('storage/' + user.avatar): ('storage/avatars/default.png')" loading="lazy" class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full object-cover border-2 border-white shadow-sm">
+                    <img :src="user.avatar ? ('/storage/' + user.avatar): ('/storage/avatars/default.png')" loading="lazy" class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full object-cover border-2 border-white shadow-sm">
                     <Link :href="route('dashboard')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Dashboard'}">Dashboard</Link>
                     <Link :href="route('logout')" method="post" as="button" type="button" class="nav-link cursor-pointer">Logout</Link>
                 </div>

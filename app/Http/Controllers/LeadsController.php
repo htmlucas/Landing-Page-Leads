@@ -12,9 +12,51 @@ use Illuminate\Support\Facades\Http;
 use App\Jobs\SendLeadEmail;
 use App\Services\AntiSpamService;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class LeadsController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $query = Lead::query();
+
+        // Filtro por Data
+        $query->when($request->date_from, function ($q) use ($request) {
+            $q->whereDate('created_at', '>=', $request->date_from);
+        });
+
+        $query->when($request->date_to, function ($q) use ($request) {
+            $q->whereDate('created_at', '<=', $request->date_to);
+        });
+
+        // Filtro por Origem
+        $query->when($request->origin, function ($q) use ($request) {
+            $q->whereJsonContains('origins', $request->origin);
+        });
+
+        // Filtro por Email
+        $query->when($request->email, function ($q) use ($request) {
+            $q->where('email', 'like', '%' . $request->email . '%');
+        });
+
+        $pageSize = $request->get('page_size',10);
+
+        $leads = $query
+            ->orderByDesc('created_at')
+            ->paginate($pageSize)
+            ->withQueryString();
+
+        return Inertia::render('Auth/Admin/Lead', [
+            'leads' => $leads,
+            'filters' => $request->only([
+                'date_from', 
+                'date_to', 
+                'origin', 
+                'email'
+            ]),
+        ]);
+    }
 
     public function store(LeadsRequest $request, AntiSpamService $antiSpamService)
     {

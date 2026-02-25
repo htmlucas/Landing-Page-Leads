@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('admin')->group(function () {
     Route::get('/admin/audit',[AuditController::class, 'index'])->name('admin.audit');
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/leads', [LeadsController::class, 'index'])->name('admin.leads');
 });
 
 Route::middleware('guest')->group(function () {
