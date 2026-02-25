@@ -6,4 +6,12 @@
 
 ### Envio de email automatico com retry apos envio do cadastro lead.
 
-## Evitar envio de emails duplicados, se ja existir apenas atualizar o updated, e adicionar multiplas origins
+### Evita envio de emails duplicados, se ja existir apenas atualiza o updated, e adiciona multiplas origins.
+
+### Log de auditoria agora para cada LEAD criado, atualizado e excluido (futuramente podendo ser colocado tambem ao gerar relatorio) utilizando spatie/laravel-activitylog
+
+### Adicionado tabela roles para controle e gerenciamento de usuarios do sistema.
+
+### Criado dashboard para visualização rapida dos Leads.
+
+### Criado pagina de leads com filtros de data, email e origem.
