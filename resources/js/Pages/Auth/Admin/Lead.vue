@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { router } from '@inertiajs/vue3'
+import axios from 'axios'
 
 const props = defineProps({
     leads: Object,
@@ -46,10 +47,19 @@ function toggleAll(event) {
     }
 }
 
-function exportSelected() {
-    router.post('/admin/leads/export', {
+async function exportSelected() {
+    const response = await axios.post('/admin/leads/export', {
         ids: selected.value
+    }, {
+        responseType: 'blob'
     })
+
+    const url = window.URL.createObjectURL(new Blob([response.data]))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'leads.xlsx')
+    document.body.appendChild(link)
+    link.click()
 }
 </script>
 
@@ -59,6 +69,14 @@ function exportSelected() {
     <div class="max-w-7xl mx-auto py-10 space-y-8">
 
         <h1 class="text-3xl font-bold">Leads</h1>
+
+        <div v-if="$page.props.flash.export_error" class="flex items-center p-2 mb-4 text-sm text-red-800">
+            <span class="font-medium">{{ $page.props.flash.export_error }}</span>
+        </div>
+
+        <div v-if="$page.props.flash.message" class="flex items-center p-2 mb-4 text-sm text-red-800">
+            <span class="font-medium">{{ $page.props.flash.message }}</span>
+        </div>
 
         <!-- FILTROS -->
         <div class="bg-white p-6 rounded-2xl shadow space-y-4">
