@@ -24,7 +24,7 @@ const user = computed(() => page.props.auth.user)
                     <div class="space-x-6">
                         <Link :href="route('admin.audit')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Auth/Admin/Audit'}">Audits</Link>
                         <Link :href="route('admin.dashboard')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Auth/Admin/Dashboard'}">Dashboard</Link>
-                        <Link :href="route('admin.leads')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Auth/Admin/Lead'}">Leads</Link>
+                        <Link :href="route('admin.leads')" class="nav-link" :class="{'bg-slate-700 p-2 rounded-md' : $page.component === 'Auth/Admin/Leads/Index'}">Leads</Link>
                     </div>
                 </div>
                 <div v-if="user" class="flex items-center gap-6">

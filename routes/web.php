@@ -23,6 +23,9 @@ Route::middleware('admin')->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/leads', [LeadsController::class, 'index'])->name('admin.leads');
     Route::post('/admin/leads/export', [LeadsController::class, 'export'])->name('admin.leads.export');
+    Route::get('/admin/leads/{lead}/edit', [LeadsController::class, 'edit'])->name('admin.leads.edit');
+    Route::put('/admin/leads/{lead}', [LeadsController::class, 'update'])->name('admin.leads.update');
+
 });
 
 Route::middleware('guest')->group(function () {
@@ -39,14 +42,14 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 
         Route::get('/admin/leads/download', function (Request $request) {
-        abort_unless($request->hasValidSignature(), 403);
+            abort_unless($request->hasValidSignature(), 403);
 
-        $path = $request->get('path');
-        abort_unless(str_starts_with($path, 'exports/'), 403);
-        abort_unless(Storage::disk('public')->exists($path), 404);
+            $path = $request->get('path');
+            abort_unless(str_starts_with($path, 'exports/'), 403);
+            abort_unless(Storage::disk('public')->exists($path), 404);
 
-        return Storage::disk('public')->download($path);
-    })->name('admin.leads.download');
+            return Storage::disk('public')->download($path);
+        })->name('admin.leads.download');
 });
 
 

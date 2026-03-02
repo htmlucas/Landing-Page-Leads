@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { router, Link } from '@inertiajs/vue3'
 import axios from 'axios'
 
 const props = defineProps({
@@ -74,7 +74,7 @@ async function exportSelected() {
             <span class="font-medium">{{ $page.props.flash.export_error }}</span>
         </div>
 
-        <div v-if="$page.props.flash.message" class="flex items-center p-2 mb-4 text-sm text-red-800">
+        <div v-if="$page.props.flash.message" class="flex items-center p-2 mb-4 text-sm text-green-800">
             <span class="font-medium">{{ $page.props.flash.message }}</span>
         </div>
 
@@ -147,6 +147,7 @@ async function exportSelected() {
                         <th class="p-3 text-left">Email</th>
                         <th class="p-3 text-left">Origins</th>
                         <th class="p-3 text-left">Data</th>
+                        <th class="p-3 text-left">Ações</th>
                     </tr>
                 </thead>
 
@@ -178,6 +179,15 @@ async function exportSelected() {
 
                         <td class="p-3">
                             {{ new Date(lead.created_at).toLocaleDateString() }}
+                        </td>
+
+                        <td class="p-3">
+                            <Link
+                                :href="`/admin/leads/${lead.id}/edit`"
+                                class="text-indigo-600 hover:underline"
+                            >
+                                Editar
+                            </Link>
                         </td>
                     </tr>
                 </tbody>

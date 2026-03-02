@@ -17,3 +17,5 @@
 ### Criado pagina de leads com filtros de data, email e origem.
 
 ### Criado exportação de leads com notificação via email para casos de leads em grandes volumes.
+
+### Edição de Lead habilitado para Admins.

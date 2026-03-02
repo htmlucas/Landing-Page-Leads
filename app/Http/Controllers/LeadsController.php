@@ -12,6 +12,8 @@ use App\Services\AntiSpamService;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Enums\LeadOrigin;
+use App\Http\Requests\LeadsUpdateRequest;
 
 class LeadsController extends Controller
 {
@@ -46,7 +48,7 @@ class LeadsController extends Controller
             ->paginate($pageSize)
             ->withQueryString();
 
-        return Inertia::render('Auth/Admin/Lead', [
+        return Inertia::render('Auth/Admin/Leads/Index', [
             'leads' => $leads,
             'filters' => $request->only([
                 'date_from', 
@@ -99,6 +101,28 @@ class LeadsController extends Controller
         });
 
         return redirect()->route('campaign')->with('greet', 'Thank you for subscribing!');
+    }
+
+    public function edit(Lead $lead)
+    {
+        return Inertia::render('Auth/Admin/Leads/Edit', [
+            'lead' => $lead,
+            'availableOrigins' => LeadOrigin::options()
+        ]);
+    }
+
+    public function update($lead_id, LeadsUpdateRequest $request)
+    {
+        
+        DB::transaction(function () use ($request, $lead_id,) {
+
+            $lead = Lead::findOrFail($lead_id);
+
+            $lead->update($request->only('name', 'email', 'phone', 'origins'));
+
+        });
+
+        return redirect()->route('admin.leads')->with('message', 'Lead updated successfully.');
     }
 
     public function export(Request $request)
