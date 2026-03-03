@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\LeadOrigin;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
 class Lead extends Model
 {
     use LogsActivity;
+    use SoftDeletes;
 
     protected $fillable = [        
         'email',

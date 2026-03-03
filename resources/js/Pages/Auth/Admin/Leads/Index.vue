@@ -19,7 +19,20 @@ const filters = reactive({
     origin: props.filters.origin || '',
     email: props.filters.email || '',
     page_size: props.filters.page_size || 10,
+    trashed: props.filters.trashed || ''
 })
+
+const destroy = (id) => {
+    if (confirm('Tem certeza que deseja excluir?')) {
+        router.delete(`/admin/leads/${id}/delete`)
+    }
+}
+
+const restore = (id) => {
+    if (confirm('Tem certeza que deseja restaurar?')) {
+        router.patch(`/admin/leads/${id}/restore`)
+    }
+}
 
 function applyFilters() {
     router.get('/admin/leads', filters, {
@@ -115,6 +128,12 @@ async function exportSelected() {
                     <option :value="50">50</option>
                 </select>
 
+                <select v-model="filters.trashed" class="border rounded p-2">
+                    <option value="">Sem excluidos</option>
+                    <option value="with">Com excluídos</option>
+                    <option value="only">Somente excluídos</option>
+                </select>
+
             </div>
 
             <div class="flex gap-3">
@@ -178,16 +197,32 @@ async function exportSelected() {
                         </td>
 
                         <td class="p-3">
-                            {{ new Date(lead.created_at).toLocaleDateString() }}
+                            {{  lead.deleted_at ? 'Excluído: ' + new Date(lead.deleted_at).toLocaleDateString() : new Date(lead.created_at).toLocaleDateString() }}
                         </td>
 
                         <td class="p-3">
-                            <Link
-                                :href="`/admin/leads/${lead.id}/edit`"
-                                class="text-indigo-600 hover:underline"
-                            >
-                                Editar
-                            </Link>
+                            <div class="flex gap-2">
+                                <Link
+                                    :href="`/admin/leads/${lead.id}/edit`"
+                                    class="text-indigo-600 hover:underline"
+                                >
+                                    Editar
+                                </Link>
+                                <button
+                                    @click="destroy(lead.id)"
+                                    class="text-red-600 hover:underline"
+                                >
+                                    Excluir
+                                </button>
+                                <button
+                                    @click="restore(lead.id)"
+                                    class="text-green-600 hover:underline"
+                                    v-if="lead.deleted_at"
+                                >
+                                    Restaurar
+                                </button>
+                            </div>
+
                         </td>
                     </tr>
                 </tbody>

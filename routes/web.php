@@ -25,6 +25,8 @@ Route::middleware('admin')->group(function () {
     Route::post('/admin/leads/export', [LeadsController::class, 'export'])->name('admin.leads.export');
     Route::get('/admin/leads/{lead}/edit', [LeadsController::class, 'edit'])->name('admin.leads.edit');
     Route::put('/admin/leads/{lead}', [LeadsController::class, 'update'])->name('admin.leads.update');
+    Route::delete('/admin/leads/{lead}/delete', [LeadsController::class, 'destroy'])->name('admin.leads.destroy');
+    Route::patch('/admin/leads/{lead}/restore', [LeadsController::class, 'restore'])->name('admin.leads.restore');
 
 });
 

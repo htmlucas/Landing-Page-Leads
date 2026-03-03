@@ -41,6 +41,15 @@ class LeadsController extends Controller
             $q->where('email', 'like', '%' . $request->email . '%');
         });
 
+        // Filtro por deletados
+        $query->when($request->trashed, function ($q) use ($request){
+            if($request->trashed === 'with') {
+                $q->withTrashed();
+            } elseif($request->trashed === 'only') {
+                $q->onlyTrashed();
+            }
+        });
+
         $pageSize = $request->get('page_size',10);
 
         $leads = $query
@@ -123,6 +132,22 @@ class LeadsController extends Controller
         });
 
         return redirect()->route('admin.leads')->with('message', 'Lead updated successfully.');
+    }
+
+    public function destroy($lead_id)
+    {
+        $lead = Lead::findOrFail($lead_id);
+        $lead->delete();
+
+        return redirect()->route('admin.leads')->with('message', 'Lead deleted successfully.');
+    }
+
+    public function restore($lead_id)
+    {
+        $lead = Lead::withTrashed()->findOrFail($lead_id);
+        $lead->restore();
+
+        return redirect()->route('admin.leads')->with('message', 'Lead restored successfully.');
     }
 
     public function export(Request $request)
