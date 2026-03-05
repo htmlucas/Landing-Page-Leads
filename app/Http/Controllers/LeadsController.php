@@ -14,6 +14,8 @@ use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Enums\LeadOrigin;
 use App\Http\Requests\LeadsUpdateRequest;
+use App\Jobs\DispatchLeadToProviders;
+use App\Jobs\SyncLeadToProvider;
 
 class LeadsController extends Controller
 {
@@ -78,7 +80,6 @@ class LeadsController extends Controller
         }
 
         $result = DB::transaction(function () use ($request, $allowDuplicates,) {
-            //$request['origin'] = 'LANDING'; // Definido temporariamente, futuramente sera pego do request.
             $lead = Lead::where('email', $request['email'])->first();
 
             if ($lead && !$allowDuplicates) {
@@ -105,6 +106,7 @@ class LeadsController extends Controller
             ]);
 
             SendLeadEmail::dispatch($lead)->afterCommit();
+            DispatchLeadToProviders::dispatch($lead)->afterCommit();
 
             return ['lead' => $lead, 'already_exists' => false];
         });

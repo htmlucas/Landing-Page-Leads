@@ -1,0 +1,39 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('lead_provider_syncs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('lead_id')->constrained()->cascadeOnDelete();
+            $table->string('provider');
+            $table->foreignId('provider_id')->constrained('mail_providers');
+            $table->enum('status', [
+                'pending',
+                'processing',
+                'synced',
+                'failed'
+            ])->default('pending');
+            $table->text('last_error')->nullable();
+            $table->unsignedInteger('attempts')->default(0);
+            $table->timestamp('synced_at')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('lead_provider_syncs');
+    }
+};

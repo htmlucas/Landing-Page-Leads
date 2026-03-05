@@ -42,12 +42,6 @@ const submitForm = () => {
             <span class="font-medium">{{ $page.props.flash.greet }}</span>
         </div>
 
-        <div v-if="audits?.length" class="flex items-center p-2 mb-4 text-sm text-green-800">
-            <div v-for="audit in audits" :key="audit.id">
-                {{  audit.description }}
-            </div>
-        </div>
-
         
         <h1 class="text-4xl font-bold mb-4">Campaign Page</h1>
         <p class="text-lg text-gray-700">Welcome to the Campaign page!</p>
