@@ -15,6 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Enums\LeadOrigin;
 use App\Http\Requests\LeadsUpdateRequest;
 use App\Jobs\DispatchLeadToProviders;
+use App\Jobs\NotifyLeadWebhookJob;
 use App\Jobs\SyncLeadToProvider;
 
 class LeadsController extends Controller
@@ -107,6 +108,10 @@ class LeadsController extends Controller
 
             SendLeadEmail::dispatch($lead)->afterCommit();
             DispatchLeadToProviders::dispatch($lead)->afterCommit();
+
+            if (config('leads.webhook_url')) {
+                NotifyLeadWebhookJob::dispatch($lead)->afterCommit();
+            }
 
             return ['lead' => $lead, 'already_exists' => false];
         });
