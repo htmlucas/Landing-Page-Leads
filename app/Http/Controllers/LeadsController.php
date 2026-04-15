@@ -14,12 +14,22 @@ use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Enums\LeadOrigin;
 use App\Http\Requests\LeadsUpdateRequest;
+use App\Http\Requests\RequestDeletionRequest;
 use App\Jobs\DispatchLeadToProviders;
 use App\Jobs\NotifyLeadWebhookJob;
+use App\Jobs\SendDeletionLeadEmail;
 use App\Jobs\SyncLeadToProvider;
+use App\Models\DataDeletionRequest;
+use App\Services\TokenService;
 
 class LeadsController extends Controller
 {
+    public $tokenService;
+
+    public function __construct(TokenService $tokenService)
+    {
+        $this->tokenService = $tokenService;
+    }
 
     public function index(Request $request)
     {
@@ -139,6 +149,73 @@ class LeadsController extends Controller
         });
 
         return redirect()->route('admin.leads')->with('message', 'Lead updated successfully.');
+    }
+
+    public function delete()
+    {
+        return inertia('DeleteLead');
+    }
+
+    public function requestDeletion(RequestDeletionRequest $request, AntiSpamService $antiSpamService)
+    {
+
+        if(!$antiSpamService->check($request)) {
+            return redirect()->route('delete-lead')->withErrors(['spam' => 'Your request was detected as spam.']);
+        }
+
+        $tokenData = $this->tokenService->generateToken();
+
+        $dataDeletionRequest = DataDeletionRequest::create([
+            'email' => $request->email,
+            'token' => $tokenData['hashed'],
+            'expires_at' => now()->addHours(1),
+        ]);
+
+        SendDeletionLeadEmail::dispatch($dataDeletionRequest, $tokenData['plain'])->afterCommit();
+
+        return redirect()->route('delete-lead')->with('message', 'If this email exists, you will receive instructions.');
+    }
+
+    public function confirmDeletion($token)
+    {
+        $hashedToken = hash('sha256', $token);
+
+        $deletionRequest = DataDeletionRequest::where('token', $hashedToken)
+            ->where('expires_at', '>', now())
+            ->first();
+
+        if (!$deletionRequest) {
+            return redirect('/deletion-error?reason=invalid');
+        }
+
+        if ($deletionRequest->used_at) {
+        return redirect('/deletion-error?reason=used');
+            }
+
+        if ($deletionRequest->expires_at < now()) {
+            return redirect('/deletion-error?reason=expired');
+        }
+
+        $lead = Lead::where('email', $deletionRequest->email)->first();
+
+        if ($lead) {
+            $this->tokenService->anonymizeLead($lead);
+        }
+
+        $deletionRequest->update([
+            'used_at' => now(),
+        ]);
+
+        activity()->withProperties(['email' => $deletionRequest->email,'action' => 'data_deletion',])->log('Lead data anonymized');
+
+        return inertia('Deletion/Success');
+    }
+
+    public function deletionErrorPage(Request $request)
+    {
+         return Inertia::render('Deletion/Error', [
+            'reason' => $request->query('reason')
+        ]);
     }
 
     public function destroy($lead_id)

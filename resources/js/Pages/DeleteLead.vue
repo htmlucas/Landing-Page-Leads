@@ -9,10 +9,7 @@ const props = defineProps({
 
 const form = useForm({
     email: null,
-    name: null,
-    phone: null,
     consent: null,
-    origin: 'youtube_ads',
     hp: '',
     recaptcha_token: '',
 });
@@ -22,9 +19,9 @@ const submitForm = () => {
         grecaptcha.execute(import.meta.env.VITE_RECAPTCHA_SITE_KEY, { action: "subscribe" })
             .then((token) => {
                 form.recaptcha_token = token;
-                    form.post(route('subscribe'),{
+                    form.post(route('leads.deletion.request'),{
                         onSuccess: () => {
-                            form.reset('email','name','phone','consent');
+                            form.reset('email', 'consent');
                         },
                     });
             });
@@ -38,13 +35,13 @@ const submitForm = () => {
 
 <template>
     <div class="min-h-screen flex flex-col items-center bg-gray-100 p-8">
-        <div v-if="$page.props.flash.greet" class="flex items-center p-2 mb-4 text-sm text-green-800">
-            <span class="font-medium">{{ $page.props.flash.greet }}</span>
+        <div v-if="$page.props.flash.message" class="flex items-center p-2 mb-4 text-sm text-green-800">
+            <span class="font-medium">{{ $page.props.flash.message }}</span>
         </div>
 
         
-        <h1 class="text-4xl font-bold mb-4">Campaign Page</h1>
-        <p class="text-lg text-gray-700">Welcome to the Campaign page!</p>
+        <h1 class="text-4xl font-bold mb-4">Delete Page</h1>
+        <p class="text-lg text-gray-700">If you want to delete your data, send us an email!</p>
         <div class="w-2/4 mx-auto mt-8">
             <form 
                 @submit.prevent="submitForm"
@@ -62,43 +59,18 @@ const submitForm = () => {
 
 
                 <TextInput name="Email" type="email" v-model="form.email" :message="form.errors.email" />
-                <TextInput name="Name" type="text" v-model="form.name" :message="form.errors.name" />
-
-                <div>
-                    <label for="phone" class="block text-gray-700 font-medium mb-2">Phone</label>
-                    <input 
-                        type="text" 
-                        v-mask="['(##) ####-####', '(##) #####-####']"
-                        placeholder="Phone" 
-                        v-model="form.phone" 
-                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        id="phone"
-                    />
-                </div>
                 
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2">
+                    <div>
                         <label for="consent">Consent?</label>
                         <input type="checkbox" id="consent" v-model="form.consent">
-                        <small class="text-red-600" v-if="form.errors.consent">
-                            {{ form.errors.consent }}
-                        </small>
+                        <small class="text-red-600" v-if="form.errors.consent"> {{ form.errors.consent }} </small>
                     </div>
                 </div>
                 <button type="submit" :disabled="form.processing"
                     class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-colors cursor-pointer">
                     Send
                 </button>
-
-                <p class="text-xs text-gray-500 mt-2">
-                    You can request deletion of your data at any time.
-                    <Link 
-                        :href="route('delete-lead')" 
-                        class="text-red-600 underline hover:text-red-800"
-                    >
-                        Click here
-                    </Link>
-                </p>
             </form>
         </div>
         

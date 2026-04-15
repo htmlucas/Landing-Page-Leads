@@ -35,7 +35,12 @@ Route::middleware('guest')->group(function () {
 
     //Route::inertia('/campaign','Campaign')->name('campaign');
     Route::get('/campaign', [CampaignController::class, 'index'])->name('campaign');
+    Route::get('/data-request/delete', [LeadsController::class, 'delete'])->name('delete-lead');
     Route::post('subscribe', [LeadsController::class, 'store'])->name('subscribe')->middleware('throttle:5,1');
+
+    Route::post('/data-request/delete', [LeadsController::class, 'requestDeletion'])->name('leads.deletion.request');
+    Route::get('/data-request/confirm/{token}', [LeadsController::class, 'confirmDeletion'])->name('leads.deletion.confirm');
+    Route::get('/deletion-error', [LeadsController::class, 'deletionErrorPage'])->name('deletion-error');
 
     Route::inertia('/form', 'Auth/Form')->name('form');
     Route::post('/register', [AuthController::class, 'register'])->name('register');
