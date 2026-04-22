@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Queue;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,5 +22,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
          Schema::defaultStringLength(191);
+
+        Queue::failing(function ($event) {
+            logger()->error('Job falhou', [
+                'job' => $event->job->resolveName(),
+                'exception' => $event->exception->getMessage(),
+                'trace' => $event->exception->getTraceAsString(),
+            ]);
+        });
     }
 }
