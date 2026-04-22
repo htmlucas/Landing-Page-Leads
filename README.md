@@ -309,3 +309,150 @@ Isso facilita monitoramento e debugging em produção.
 ### 🛡️ Fluxo de Resiliência (Rate Limit + Circuit Breaker)
 
 ![Arquitetura do sistema](docs/images/Fluxo-resiliencia.png)
+
+
+### 🔔 Webhook de Notificação de Leads
+
+Foi implementado um sistema de webhook para notificar serviços externos sempre que um lead é criado ou atualizado.
+
+Fluxo:
+
+```PHP
+Lead criado/atualizado
+      ↓
+Evento disparado
+      ↓
+Envio HTTP para endpoint configurado
+```
+
+Isso permite integrações com:
+
+- sistemas internos
+- CRMs
+- ferramentas de automação
+
+O webhook utiliza autenticação via secret:
+```
+LEADS_WEBHOOK_SECRET
+```
+Garantindo segurança na comunicação.
+
+<hr>
+
+### 🗑️ Endpoint para Exclusão de Dados (LGPD)
+
+Foi criado um endpoint para exclusão de dados de leads, seguindo boas práticas de privacidade.
+
+Funcionalidades:
+
+- exclusão completa de dados sensíveis
+- rastreabilidade via logs
+- compatível com solicitações de remoção (LGPD)
+
+Isso garante conformidade com políticas de proteção de dados.
+
+<hr>
+
+### 🔐 Segurança da Aplicação
+
+Foram implementadas diversas camadas de segurança:
+
+    ✔ CSRF (Cross-Site Request Forgery)
+
+    Proteção automática contra requisições maliciosas.
+
+    ✔ XSS (Cross-Site Scripting)
+
+    Sanitização de inputs e uso seguro de renderização.
+
+    ✔ CORS (Cross-Origin Resource Sharing)
+
+    Controle de acesso entre diferentes origens.
+
+Isso garante maior proteção contra ataques comuns em aplicações web.
+
+<hr>
+
+### 🧪 Testes de Integração
+
+Foram implementados testes utilizando PHPUnit para garantir o correto funcionamento das principais funcionalidades do sistema.
+
+Cobertura inclui:
+
+- criação de leads
+- validação de regras de negócio
+- execução de jobs
+- integração com APIs externas
+
+Exemplo:
+```bash
+php artisan test
+```
+Isso garante maior confiabilidade e facilita manutenção futura.
+
+<hr>
+
+### 💾 Backup Automático do Banco de Dados
+
+Foi implementado um sistema de backup automático do banco.
+
+Funcionalidades:
+
+- geração diária de dump do banco (mysqldump)
+- armazenamento em storage
+- rotação automática mantendo os últimos 7 dias
+
+Fluxo:
+```
+Scheduler
+    ↓
+Command backup:dump
+    ↓
+Arquivo .sql gerado
+    ↓
+Limpeza de backups antigos
+```
+Isso garante segurança contra perda de dados.
+
+<hr>
+
+### 📤 Exportação Automatizada de Dados
+
+Além da exportação manual, foi implementada rotina automatizada para geração de exportações periódicas.
+
+- execução via queue
+- processamento assíncrono
+- envio por e-mail ao finalizar
+
+Isso melhora a escalabilidade e evita sobrecarga no sistema.
+
+<hr>
+
+### 📊 Monitoramento de Filas e Jobs
+
+Foi implementado monitoramento de filas para garantir a estabilidade do sistema.
+
+Funcionalidades:
+
+- registro automático de falhas (failed_jobs)
+- log detalhado com stacktrace
+- retry automático de jobs
+- notificação por e-mail em falhas críticas
+
+Exemplo de monitoramento:
+
+```bash
+php artisan queue:failed
+```
+
+Logs incluem:
+
+- nome do job
+- mensagem de erro
+- stacktrace completo
+
+⚠️ O uso do Laravel Horizon é suportado em ambientes Linux.
+Em ambiente Windows, o monitoramento foi implementado via logs e comandos nativos do Laravel.
+
+<hr>
+
