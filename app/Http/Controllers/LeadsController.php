@@ -91,10 +91,16 @@ class LeadsController extends Controller
         }
 
         $result = DB::transaction(function () use ($request, $allowDuplicates,) {
-            $lead = Lead::where('email', $request['email'])->first();
+            $lead = Lead::withTrashed()
+                ->where('email', $request['email'])
+                ->first();
 
             if ($lead && !$allowDuplicates) {
                 // Já existe → update
+
+                if ($lead->trashed()) {
+                    $lead->restore();
+                }
 
                 $origins = $lead->origins ?? [];
 
